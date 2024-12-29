@@ -42,12 +42,21 @@ export const updateUser = async (user, idUser) => {
 };
 
 export const updatePassword = async (password) => {
-  const idUser = getUserIdFromToken();  
+  const idUser = getUserIdFromToken();
   if (!idUser) {
     throw new Error("Usuário não autenticado.");
   }
+
   try {
-    const response = await api.put(`${_URL}/change-password/${idUser}`, password);
+    const response = await api.patch(
+      `${_URL}/change-password/${idUser}`,
+      password,
+      {
+        headers: {
+          "Content-Type": "text/plain",
+        },
+      }
+    );
     return response.data;
   } catch (error) {
     throw error;

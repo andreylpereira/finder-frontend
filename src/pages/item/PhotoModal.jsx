@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Button, Figure } from "react-bootstrap/";
+import { Modal, Figure } from "react-bootstrap/";
 
 const PhotoModal = ({ show, handleClose, photo }) => {
   return (

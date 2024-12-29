@@ -77,7 +77,7 @@ const ItemModal = ({
           <Form.Group controlId="formDateFound">
             <Form.Label>Data Encontrada</Form.Label>
             <Form.Control
-              type="datetime-local"
+              type="date"
               name="dateFound"
               value={form.dateFound || ""}
               required

@@ -17,6 +17,7 @@ import {
 } from "react-bootstrap/";
 import ItemModal from "./ItemModal";
 import PhotoModal from "./PhotoModal";
+import FormsModal from "./FormsModal"; 
 
 const Item = () => {
   const dispatch = useDispatch();
@@ -24,9 +25,15 @@ const Item = () => {
   const { items, loading, error } = useSelector((state) => state.item);
 
   const [modalPhotoVisible, setModalPhotoVisible] = useState(false);
+  const [modalFormsVisible, setModalFormsVisible] = useState(false); 
+  
   const [modalPhoto, setModalPhoto] = useState("");
+  const [forms, setForms] = useState([]); 
   const [modalVisible, setModalVisible] = useState(false);
+  
   const [modalMode, setModalMode] = useState("create");
+
+
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -86,20 +93,30 @@ const Item = () => {
     setModalVisible(true);
   };
 
-  const handleClose = () => {
-    setModalPhotoVisible(false);
-    setModalVisible(false);
-    setForm({
-      title: "",
-      description: "",
-      localFound: "",
-      dateFound: "",
-      contentType: "",
-      base64Image: "",
-      status: "",
-      ownerFound: true,
-      userId: "",
-    });
+  const handleModalForms = (forms) => {
+    setForms(forms); 
+    setModalFormsVisible(true); 
+  };
+
+  const handleClose = (modal) => {
+    if(modal === "forms") {
+      setModalFormsVisible(false);
+    } else if (modal === "photo") {
+      setModalPhotoVisible(false); 
+    } else {
+      setModalVisible(false);
+      setForm({
+        title: "",
+        description: "",
+        localFound: "",
+        dateFound: "",
+        contentType: "",
+        base64Image: "",
+        status: "",
+        ownerFound: true,
+        userId: "",
+      });
+    }
   };
 
   const handleSubmit = (e) => {
@@ -190,24 +207,27 @@ const Item = () => {
               </Button>
               <Table bordered hover className="shadow mt-3">
                 <thead>
-                  <tr className="text-center text-uppercase">
-                    <th></th>
-                    <th>Descrição</th>
-                    <th>Local Encontrado</th>
-                    <th>Data Encontrada</th>
-                    <th>Data Cadastro</th>
-                    <th>Status</th>
-                    <th>Dono Achado</th>
-                    <th></th>
+                  <tr className="text-center text-uppercase text-light bg-primary ">
+                    <th className="text-light bg-primary border-0"></th>
+                    <th className="text-light bg-primary border-0">Descrição</th>
+                    <th className="text-light bg-primary border-0">Local Encontrado</th>
+                    <th className="text-light bg-primary border-0">Data Encontrada</th>
+                    <th className="text-light bg-primary border-0">Data Cadastro</th>
+                    <th className="text-light bg-primary border-0">Status</th>
+                    <th className="text-light bg-primary border-0">Dono Achado</th>
+                    <th className="text-light bg-primary border-0"></th>
                   </tr>
                 </thead>
                 <tbody>
                   {items.map((item) => (
                     <tr key={item.id} className="text-center">
                       <td>
-                        <Figure.Caption>{item.title}</Figure.Caption>
+                        <Figure.Caption className="text-dark">
+                          <h6>{item.title}</h6>
+                          </Figure.Caption>
                         <Figure.Image
                           className="m-0 p-0"
+                          style={{ cursor: 'pointer' }}
                           width={100}
                           height={100}
                           alt="Imagem"
@@ -227,7 +247,9 @@ const Item = () => {
                       <td>{item.ownerFound ? "Sim" : "Não"}</td>
                       <td>
                         <Col className="d-flex flex-column align-items-center">
-                          {item.id !== 1 ? (
+                          {item.ownerFound !== true ||
+                          item.status === "Novo" ||
+                          item.status === "Em análise" ? (
                             <Button
                               type="button"
                               className="fw-bold bg-gradient rounded shadow mb-2"
@@ -247,8 +269,9 @@ const Item = () => {
                           <Button
                             variant="outline-primary"
                             className="fw-bold rounded shadow"
+                            onClick={() => handleModalForms(item.forms)} 
                           >
-                            Formulário {item.forms.length}
+                            Formulários
                           </Button>
                         </Col>
                       </td>
@@ -268,7 +291,7 @@ const Item = () => {
 
       <ItemModal
         show={modalVisible}
-        handleClose={handleClose}
+        handleClose={() => handleClose("items")}
         form={form}
         setForm={setForm}
         handleSubmit={handleSubmit}
@@ -277,8 +300,14 @@ const Item = () => {
 
       <PhotoModal
         show={modalPhotoVisible}
-        handleClose={handleClose}
+        handleClose={() => handleClose("photo")}
         photo={modalPhoto}
+      />
+
+      <FormsModal
+        show={modalFormsVisible}
+        handleClose={() => handleClose("forms")}
+        forms={forms}
       />
     </>
   );

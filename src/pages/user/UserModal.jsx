@@ -10,7 +10,7 @@ const UserModal = ({
   modalMode,
 }) => {
   return (
-    <Modal show={show} onHide={handleClose}>
+    <Modal show={show} onHide={handleClose} centered>
       <Modal.Header closeButton>
         <Modal.Title>
           {modalMode === "create" ? "Criar Usuário" : "Editar Usuário"}
