@@ -357,6 +357,7 @@ const Item = () => {
         show={modalFormsVisible}
         handleClose={() => handleClose("forms")}
         forms={modalForms}
+        formatDate={formatDate}
       />
 
       <ObservationModal
