@@ -7,25 +7,16 @@ import {
 } from "../../redux/actions/userActions";
 import Bread from "../../components/Bread";
 import { toast } from "sonner";
-import {
-  Table,
-  Spinner,
-  Container,
-  Button,
-  Col,
-  Modal,
-  Form,
-} from "react-bootstrap/";
+import { Table, Spinner, Container, Button, Col } from "react-bootstrap/";
+import UserModal from "./UserModal"; 
 
 const User = () => {
   const dispatch = useDispatch();
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalMode, setModalMode] = useState("create");
-  const [modalError, setModalError] = useState(null);
-
   const { users, loading, error } = useSelector((state) => state.user);
 
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMode, setModalMode] = useState("create");
   const [form, setForm] = useState({
     email: "",
     password: "",
@@ -33,6 +24,7 @@ const User = () => {
     role: "",
     position: "",
     enable: true,
+    forms: []
   });
 
   useEffect(() => {
@@ -62,6 +54,7 @@ const User = () => {
       role: user.role,
       position: user.position,
       enable: user.enable,
+
     });
     setModalVisible(true);
   };
@@ -78,41 +71,20 @@ const User = () => {
     });
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
+  const handleSubmit = (userData) => {
     if (modalMode === "create") {
-      const newUser = {
-        name: form.name,
-        email: form.email,
-        password: form.password,
-        role: form.role,
-        position: form.position,
-        enable: form.enable,
-      };
-
-      dispatch(createUserAction(newUser))
+      dispatch(createUserAction(userData))
         .then(() => {
-          fetchUsers();
+          dispatch(fetchUsers());
           toast.success("Usuário cadastrado com sucesso.");
           handleClose();
         })
         .catch((error) => toast.error(error.message));
     } else if (modalMode === "edit") {
-      const updatedUser = {
-        id: form.id,
-        name: form.name,
-        email: form.email,
-        password: null,
-        role: form.role,
-        position: form.position,
-        enable: form.enable,
-      };
-
-      dispatch(updateUserAction(updatedUser, updatedUser.id))
+      dispatch(updateUserAction(userData, userData.id))
         .then(() => {
           dispatch(fetchUsers());
-          toast.success("Usuário atualizado com sucesso");
+          toast.success("Usuário atualizado com sucesso.");
           handleClose();
         })
         .catch((error) => toast.error(error.message));
@@ -141,7 +113,7 @@ const User = () => {
           {users.length > 0 && (
             <div>
               <h5 className="fw-bold mb-5 mt-5">
-              <Bread current="Usuários" />
+                <Bread current="Usuários" />
               </h5>
               <Button
                 type="button"
@@ -196,100 +168,20 @@ const User = () => {
           )}
           {!loading && users.length === 0 && !error && (
             <div className="alert alert-warning mt-3" role="alert">
-              Não há usuário cadastrados.
+              Não há usuários cadastrados.
             </div>
           )}
         </Col>
       </Container>
 
-      <Modal show={modalVisible} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {modalMode === "create" ? "Criar Usuário" : "Editar Usuário"}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formName">
-              <Form.Label>Nome</Form.Label>
-              <Form.Control
-                type="text"
-                name="name"
-                value={form.name || ""}
-                required
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formEmail">
-              <Form.Label>Email</Form.Label>
-              <Form.Control
-                type="email"
-                name="email"
-                value={form.email || ""}
-                required
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-              />
-            </Form.Group>
-
-            {modalMode === "create" && (
-              <Form.Group controlId="formPassword">
-                <Form.Label>Senha</Form.Label>
-                <Form.Control
-                  type="password"
-                  name="password"
-                  value={form.password || ""}
-                  required
-                  onChange={(e) =>
-                    setForm({ ...form, password: e.target.value })
-                  }
-                />
-              </Form.Group>
-            )}
-
-            <Form.Group controlId="formRole">
-              <Form.Label>Role</Form.Label>
-              <Form.Control
-                type="text"
-                name="role"
-                value={form.role || ""}
-                required
-                onChange={(e) => setForm({ ...form, role: e.target.value })}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formPosition">
-              <Form.Label>Cargo</Form.Label>
-              <Form.Control
-                type="text"
-                name="position"
-                value={form.position || ""}
-                required
-                onChange={(e) => setForm({ ...form, position: e.target.value })}
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formEnable">
-              <Form.Label>Habilitado</Form.Label>
-              <Form.Check
-                type="checkbox"
-                label="Sim"
-                checked={modalMode === "create" ? true : form.enable}
-                onChange={(e) => setForm({ ...form, enable: e.target.checked })}
-              />
-            </Form.Group>
-
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Fechar
-              </Button>
-              <Button variant="primary" type="submit">
-                {modalMode === "create" ? "Criar" : "Atualizar"}
-              </Button>
-            </Modal.Footer>
-          </Form>
-        </Modal.Body>
-      </Modal>
+      <UserModal
+        show={modalVisible}
+        handleClose={handleClose}
+        form={form}
+        setForm={setForm}
+        handleSubmit={handleSubmit}
+        modalMode={modalMode}
+      />
     </>
   );
 };

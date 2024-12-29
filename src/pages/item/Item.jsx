@@ -12,20 +12,21 @@ import {
   Spinner,
   Container,
   Button,
-  Col,
-  Modal,
-  Form,
   Figure,
+  Col,
 } from "react-bootstrap/";
+import ItemModal from "./ItemModal";
+import PhotoModal from "./PhotoModal";
 
 const Item = () => {
   const dispatch = useDispatch();
 
-  const [modalVisible, setModalVisible] = useState(false);
-  const [modalMode, setModalMode] = useState("create");
-
   const { items, loading, error } = useSelector((state) => state.item);
 
+  const [modalPhotoVisible, setModalPhotoVisible] = useState(false);
+  const [modalPhoto, setModalPhoto] = useState("");
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMode, setModalMode] = useState("create");
   const [form, setForm] = useState({
     title: "",
     description: "",
@@ -45,6 +46,11 @@ const Item = () => {
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString("pt-BR");
+  };
+
+  const handleModalPhoto = (photo) => {
+    setModalPhoto(photo);
+    setModalPhotoVisible(true);
   };
 
   const handleModalCreate = () => {
@@ -81,6 +87,7 @@ const Item = () => {
   };
 
   const handleClose = () => {
+    setModalPhotoVisible(false);
     setModalVisible(false);
     setForm({
       title: "",
@@ -150,25 +157,6 @@ const Item = () => {
     }
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const base64String = reader.result;
-        const contentType = file.type;
-        const base64Image = base64String.split(",")[1];
-
-        setForm({
-          ...form,
-          contentType,
-          base64Image,
-        });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
     <>
       <Container className="d-flex justify-content-center min-vh-100 item-select-none">
@@ -224,6 +212,11 @@ const Item = () => {
                           height={100}
                           alt="Imagem"
                           src={`data:${item.contentType};base64,${item.base64Image}`}
+                          onClick={() =>
+                            handleModalPhoto(
+                              `data:${item.contentType};base64,${item.base64Image}`
+                            )
+                          }
                         />
                       </td>
                       <td>{item.description}</td>
@@ -255,7 +248,7 @@ const Item = () => {
                             variant="outline-primary"
                             className="fw-bold rounded shadow"
                           >
-                            Formulário
+                            Formulário {item.forms.length}
                           </Button>
                         </Col>
                       </td>
@@ -273,112 +266,20 @@ const Item = () => {
         </Col>
       </Container>
 
-      <Modal show={modalVisible} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>
-            {modalMode === "create" ? "Criar Item" : "Editar Item"}
-          </Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Form onSubmit={handleSubmit}>
-            <Form.Group controlId="formTitle">
-              <Form.Label>Título</Form.Label>
-              <Form.Control
-                type="text"
-                name="title"
-                value={form.title || ""}
-                required
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
-              />
-            </Form.Group>
+      <ItemModal
+        show={modalVisible}
+        handleClose={handleClose}
+        form={form}
+        setForm={setForm}
+        handleSubmit={handleSubmit}
+        modalMode={modalMode}
+      />
 
-            <Form.Group controlId="formDescription">
-              <Form.Label>Descrição</Form.Label>
-              <Form.Control
-                type="text"
-                name="description"
-                value={form.description || ""}
-                required
-                onChange={(e) =>
-                  setForm({ ...form, description: e.target.value })
-                }
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formLocalFound">
-              <Form.Label>Local Encontrado</Form.Label>
-              <Form.Control
-                type="text"
-                name="localFound"
-                value={form.localFound || ""}
-                required
-                onChange={(e) =>
-                  setForm({ ...form, localFound: e.target.value })
-                }
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formDateFound">
-              <Form.Label>
-                <b>Data Encontrada</b>
-              </Form.Label>
-              <Form.Control
-                type="datetime-local"
-                name="dateFound"
-                value={form.dateFound || ""}
-                required
-                onChange={(e) =>
-                  setForm({ ...form, dateFound: e.target.value })
-                }
-              />
-            </Form.Group>
-
-            <Form.Group controlId="formPhoto">
-              <Form.Label>Foto</Form.Label>
-              <Form.Control
-                type="file"
-                onChange={handleFileChange}
-              />
-              {form.base64Image && (
-                <Figure className="mt-2">
-                  <Figure.Image
-                    width={100}
-                    height={100}
-                    alt="Imagem do Item"
-                    src={`data:${form.contentType};base64,${form.base64Image}`}
-                  />
-                </Figure>
-              )}
-            </Form.Group>
-
-            <Form.Group controlId="formStatus">
-              <Form.Label>Status</Form.Label>
-              <Form.Control
-                as="select"
-                name="status"
-                value={form.status || ""} 
-                onChange={(e) => setForm({ ...form, status: e.target.value })} 
-                required
-              >
-                <option value="">Selecione...</option>
-                <option value="Novo">Novo</option>
-                <option value="Em análise">Em análise</option>
-                <option value="Recuperado">Recuperado</option>
-                <option value="Descartado">Descartado</option>
-              </Form.Control>
-            </Form.Group>
-
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Fechar
-              </Button>
-              <Button variant="primary" type="submit">
-                {modalMode === "create" ? "Criar" : "Atualizar"}
-              </Button>
-            </Modal.Footer>
-          </Form>
-        </Modal.Body>
-      </Modal>
+      <PhotoModal
+        show={modalPhotoVisible}
+        handleClose={handleClose}
+        photo={modalPhoto}
+      />
     </>
   );
 };
