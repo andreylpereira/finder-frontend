@@ -1,23 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  fetchItems,
-  createItemAction,
-  updateItemAction,
-} from "../../redux/actions/itemActions";
+import { fetchItems, createItemAction, updateItemAction, } from "../../redux/actions/itemActions";
 import Bread from "../../components/Bread";
 import { toast } from "sonner";
-import {
-  Table,
-  Spinner,
-  Container,
-  Button,
-  Figure,
-  Col,
-} from "react-bootstrap/";
+import { Table, Spinner, Container, Button, Figure, Col, Badge } from "react-bootstrap/";
 import ItemModal from "./ItemModal";
 import PhotoModal from "./PhotoModal";
-import FormsModal from "./FormsModal"; 
+import FormsModal from "./FormsModal";
+import ObservationModal from "./ObservationModal";
 
 const Item = () => {
   const dispatch = useDispatch();
@@ -25,14 +15,15 @@ const Item = () => {
   const { items, loading, error } = useSelector((state) => state.item);
 
   const [modalPhotoVisible, setModalPhotoVisible] = useState(false);
-  const [modalFormsVisible, setModalFormsVisible] = useState(false); 
-  
-  const [modalPhoto, setModalPhoto] = useState("");
-  const [forms, setForms] = useState([]); 
-  const [modalVisible, setModalVisible] = useState(false);
-  
-  const [modalMode, setModalMode] = useState("create");
+  const [modalFormsVisible, setModalFormsVisible] = useState(false);
+  const [modalObservationVisible, setModalObservationVisible] = useState(false);
 
+  const [modalPhoto, setModalPhoto] = useState("");
+  const [modalForms, setModalForms] = useState([]);
+  const [modalObservation, setModalObservation] = useState("");
+
+  const [modalVisible, setModalVisible] = useState(false);
+  const [modalMode, setModalMode] = useState("create");
 
   const [form, setForm] = useState({
     title: "",
@@ -42,18 +33,10 @@ const Item = () => {
     contentType: "",
     base64Image: "",
     status: "",
-    ownerFound: true,
+    ownerFound: false,
+    observation: "",
     userId: "",
   });
-
-  useEffect(() => {
-    dispatch(fetchItems());
-  }, [dispatch]);
-
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("pt-BR");
-  };
 
   const handleModalPhoto = (photo) => {
     setModalPhoto(photo);
@@ -70,7 +53,8 @@ const Item = () => {
       contentType: "",
       base64Image: "",
       status: "",
-      ownerFound: true,
+      ownerFound: false,
+      observation: "",
       userId: "",
     });
     setModalVisible(true);
@@ -88,21 +72,29 @@ const Item = () => {
       base64Image: item.base64Image,
       status: item.status,
       ownerFound: item.ownerFound,
+      observation: item.observation,
       userId: item.userId || "",
     });
     setModalVisible(true);
   };
 
   const handleModalForms = (forms) => {
-    setForms(forms); 
-    setModalFormsVisible(true); 
+    setModalForms(forms);
+    setModalFormsVisible(true);
+  };
+
+  const handleModalObservation = (observation) => {
+    setModalObservation(observation);
+    setModalObservationVisible(true);
   };
 
   const handleClose = (modal) => {
-    if(modal === "forms") {
+    if (modal === "forms") {
       setModalFormsVisible(false);
     } else if (modal === "photo") {
-      setModalPhotoVisible(false); 
+      setModalPhotoVisible(false);
+    } else if (modal === "observation") {
+      setModalObservationVisible(false);
     } else {
       setModalVisible(false);
       setForm({
@@ -113,7 +105,8 @@ const Item = () => {
         contentType: "",
         base64Image: "",
         status: "",
-        ownerFound: true,
+        ownerFound: false,
+        observation: "",
         userId: "",
       });
     }
@@ -147,6 +140,7 @@ const Item = () => {
       base64Image: form.base64Image,
       status: form.status,
       ownerFound: form.ownerFound,
+      observation: form.observation,
       userId: form.userId || "",
     };
 
@@ -173,6 +167,15 @@ const Item = () => {
         .catch((error) => toast.error(error.message));
     }
   };
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("pt-BR");
+  };
+
+  useEffect(() => {
+    dispatch(fetchItems());
+  }, [dispatch]);
 
   return (
     <>
@@ -209,12 +212,17 @@ const Item = () => {
                 <thead>
                   <tr className="text-center text-uppercase text-light bg-primary ">
                     <th className="text-light bg-primary border-0"></th>
-                    <th className="text-light bg-primary border-0">Descrição</th>
-                    <th className="text-light bg-primary border-0">Local Encontrado</th>
-                    <th className="text-light bg-primary border-0">Data Encontrada</th>
-                    <th className="text-light bg-primary border-0">Data Cadastro</th>
+                    <th className="text-light bg-primary border-0">
+                      Descrição
+                    </th>
+                    <th className="text-light bg-primary border-0">
+                      Local Encontrado
+                    </th>
+                    <th className="text-light bg-primary border-0">Datas</th>
+                    <th className="text-light bg-primary border-0">
+                      Dono Localizado
+                    </th>
                     <th className="text-light bg-primary border-0">Status</th>
-                    <th className="text-light bg-primary border-0">Dono Achado</th>
                     <th className="text-light bg-primary border-0"></th>
                   </tr>
                 </thead>
@@ -224,10 +232,10 @@ const Item = () => {
                       <td>
                         <Figure.Caption className="text-dark">
                           <h6>{item.title}</h6>
-                          </Figure.Caption>
+                        </Figure.Caption>
                         <Figure.Image
                           className="m-0 p-0"
-                          style={{ cursor: 'pointer' }}
+                          style={{ cursor: "pointer" }}
                           width={100}
                           height={100}
                           alt="Imagem"
@@ -241,10 +249,42 @@ const Item = () => {
                       </td>
                       <td>{item.description}</td>
                       <td>{item.localFound}</td>
-                      <td>{formatDate(item.dateFound)}</td>
-                      <td>{formatDate(item.registrationDate)}</td>
-                      <td>{item.status}</td>
-                      <td>{item.ownerFound ? "Sim" : "Não"}</td>
+                      <td>
+                        <div className="fw-light fw-italic">
+                          Encontrado: {formatDate(item.dateFound)}
+                        </div>
+                        <div className="fw-light fw-talic">
+                          Registrado: {formatDate(item.registrationDate)}
+                        </div>
+                      </td>
+                      <td>
+                        <Badge
+                          className="text-light"
+                          bg={item.ownerFound ? "success" : "danger"}
+                          variant={item.ownerFound ? "success" : "danger"}
+                        >
+                          {item.ownerFound ? "Sim" : "Não"}
+                        </Badge>
+                      </td>
+
+                      <td>
+                        <Badge
+                          className="text-light"
+                          bg={
+                            item.status === "Novo"
+                              ? "primary"
+                              : item.status === "Em análise"
+                              ? "secondary"
+                              : item.status === "Recuperado"
+                              ? "success"
+                              : item.status === "Descartado"
+                              ? "danger"
+                              : ""
+                          }
+                        >
+                          {item.status}
+                        </Badge>
+                      </td>
                       <td>
                         <Col className="d-flex flex-column align-items-center">
                           {item.ownerFound !== true ||
@@ -252,7 +292,7 @@ const Item = () => {
                           item.status === "Em análise" ? (
                             <Button
                               type="button"
-                              className="fw-bold bg-gradient rounded shadow mb-2"
+                              className="bg-gradient rounded shadow mb-2"
                               onClick={() => handleModalEdit(item)}
                             >
                               EDITAR
@@ -260,7 +300,7 @@ const Item = () => {
                           ) : (
                             <Button
                               type="button"
-                              className="fw-bold bg-gradient rounded shadow mb-2"
+                              className="bg-gradient rounded shadow mb-2"
                               disabled
                             >
                               EDITAR
@@ -268,10 +308,19 @@ const Item = () => {
                           )}
                           <Button
                             variant="outline-primary"
-                            className="fw-bold rounded shadow"
-                            onClick={() => handleModalForms(item.forms)} 
+                            className="bg-gradient rounded shadow mb-2"
+                            onClick={() =>
+                              handleModalObservation(item.observation)
+                            }
                           >
-                            Formulários
+                            OBSERVAÇÃO
+                          </Button>
+                          <Button
+                            variant="outline-secondary"
+                            className="bg-gradient rounded shadow mb-2"
+                            onClick={() => handleModalForms(item.forms)}
+                          >
+                            FORMULÁRIOS
                           </Button>
                         </Col>
                       </td>
@@ -307,7 +356,13 @@ const Item = () => {
       <FormsModal
         show={modalFormsVisible}
         handleClose={() => handleClose("forms")}
-        forms={forms}
+        forms={modalForms}
+      />
+
+      <ObservationModal
+        show={modalObservationVisible}
+        handleClose={() => handleClose("observation")}
+        observation={modalObservation}
       />
     </>
   );

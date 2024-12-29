@@ -28,6 +28,10 @@ const ItemModal = ({
     }
   };
 
+  const handleCheckboxChange = (e) => {
+    setForm({ ...form, ownerFound: e.target.checked });
+  };
+
   return (
     <Modal show={show} onHide={handleClose}>
       <Modal.Header closeButton>
@@ -68,9 +72,7 @@ const ItemModal = ({
               name="localFound"
               value={form.localFound || ""}
               required
-              onChange={(e) =>
-                setForm({ ...form, localFound: e.target.value })
-              }
+              onChange={(e) => setForm({ ...form, localFound: e.target.value })}
             />
           </Form.Group>
 
@@ -87,10 +89,7 @@ const ItemModal = ({
 
           <Form.Group controlId="formPhoto">
             <Form.Label>Foto</Form.Label>
-            <Form.Control
-              type="file"
-              onChange={handleFileChange}
-            />
+            <Form.Control type="file" onChange={handleFileChange} />
             {form.base64Image && (
               <Figure className="mt-2">
                 <Figure.Image
@@ -118,6 +117,30 @@ const ItemModal = ({
               <option value="Recuperado">Recuperado</option>
               <option value="Descartado">Descartado</option>
             </Form.Control>
+          </Form.Group>
+
+          <Form.Group controlId="formOwnerFound">
+            <Form.Label>Dono Encontrado</Form.Label>
+            <Form.Check
+              type="checkbox"
+              name="ownerFound"
+              checked={form.ownerFound || false}
+              onChange={handleCheckboxChange}
+              label="Dono encontrado"
+            />
+          </Form.Group>
+
+          <Form.Group controlId="formObservation">
+            <Form.Label>Observação</Form.Label>
+            <Form.Control
+              as="textarea"
+              name="observation"
+              value={form.observation || ""}
+              rows={3}
+              onChange={(e) =>
+                setForm({ ...form, observation: e.target.value })
+              }
+            />
           </Form.Group>
 
           <Modal.Footer>
