@@ -5,10 +5,10 @@ import { Outlet } from "react-router-dom";
 const Dashboard = () => {
   return (
     <>
-<div style={{ backgroundColor: '#E2EEFF' }}>
-  <NavHeader />
-  <Outlet />
-</div>
+      <div style={{ backgroundColor: "#E2EEFF" }}>
+        <NavHeader />
+        <Outlet />
+      </div>
     </>
   );
 };

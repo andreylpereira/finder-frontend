@@ -12,8 +12,6 @@ import Home from "../pages/home/Home";
 import Dashboard from "../pages/dashboard/Dashboard";
 import User from "../pages/user/User";
 import Item from "../pages/item/Item";
-import Form from "../pages/form/Form";
-import Panel from "../pages/panel/Panel";
 import { Toaster } from "sonner";
 
 const Routers = () => {
@@ -43,8 +41,6 @@ const Routers = () => {
               }
             />
             <Route path="items" element={<Item />} />
-            <Route path="forms" element={<Form />} />
-            <Route path="panel" element={<Panel />} />
             <Route path="users" element={<User />} />
             </Route>
           </Routes>

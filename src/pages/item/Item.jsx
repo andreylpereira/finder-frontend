@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchItems, createItemAction, updateItemAction, } from "../../redux/actions/itemActions";
+import {
+  fetchItems,
+  createItemAction,
+  updateItemAction,
+} from "../../redux/actions/itemActions";
 import Bread from "../../components/Bread";
 import { toast } from "sonner";
-import { Table, Spinner, Container, Button, Figure, Col, Badge } from "react-bootstrap/";
+import {
+  Table,
+  Spinner,
+  Container,
+  Button,
+  Figure,
+  Col,
+  Badge,
+} from "react-bootstrap/";
 import ItemModal from "./ItemModal";
 import PhotoModal from "./PhotoModal";
 import FormsModal from "./FormsModal";
@@ -208,21 +220,16 @@ const Item = () => {
               >
                 CADASTRAR
               </Button>
-              <Table bordered hover className="shadow mt-3">
+              <Table bordered hover className="mt-3">
                 <thead>
                   <tr className="text-center text-uppercase text-light bg-primary ">
                     <th className="text-light bg-primary border-0"></th>
                     <th className="text-light bg-primary border-0">
                       Descrição
                     </th>
-                    <th className="text-light bg-primary border-0">
-                      Local Encontrado
-                    </th>
+                    <th className="text-light bg-primary border-0">Local</th>
                     <th className="text-light bg-primary border-0">Datas</th>
-                    <th className="text-light bg-primary border-0">
-                      Dono Localizado
-                    </th>
-                    <th className="text-light bg-primary border-0">Status</th>
+                    <th className="text-light bg-primary border-0">Dono</th>
                     <th className="text-light bg-primary border-0"></th>
                   </tr>
                 </thead>
@@ -230,26 +237,46 @@ const Item = () => {
                   {items.map((item) => (
                     <tr key={item.id} className="text-center">
                       <td>
-                        <Figure.Caption className="text-dark">
-                          <h6>{item.title}</h6>
-                        </Figure.Caption>
-                        <Figure.Image
-                          className="m-0 p-0"
-                          style={{ cursor: "pointer" }}
-                          width={100}
-                          height={100}
-                          alt="Imagem"
-                          src={`data:${item.contentType};base64,${item.base64Image}`}
-                          onClick={() =>
-                            handleModalPhoto(
-                              `data:${item.contentType};base64,${item.base64Image}`
-                            )
-                          }
-                        />
+                        <Figure>
+                          <Figure.Caption>
+                            <Badge
+                              className="text-light mb-2"
+                              bg={
+                                item.status === "Novo"
+                                  ? "primary"
+                                  : item.status === "Em análise"
+                                  ? "secondary"
+                                  : item.status === "Recuperado"
+                                  ? "success"
+                                  : item.status === "Descartado"
+                                  ? "danger"
+                                  : ""
+                              }
+                            >
+                              {item.status}
+                            </Badge>
+                          </Figure.Caption>
+                          <Figure.Image
+                            className="m-0 p-0 border-1"
+                            style={{ cursor: "pointer" }}
+                            width={120}
+                            height={120}
+                            alt="Imagem"
+                            src={`data:${item.contentType};base64,${item.base64Image}`}
+                            onClick={() =>
+                              handleModalPhoto(
+                                `data:${item.contentType};base64,${item.base64Image}`
+                              )
+                            }
+                          />
+                          <Figure.Caption>
+                            <h6 className="text-dark m-0">{item.title}</h6>
+                          </Figure.Caption>
+                        </Figure>
                       </td>
-                      <td>{item.description}</td>
+                      <td className="w-25">{item.description}</td>
                       <td>{item.localFound}</td>
-                      <td>
+                      <td className="">
                         <div className="fw-light fw-italic">
                           Encontrado: {formatDate(item.dateFound)}
                         </div>
@@ -264,25 +291,6 @@ const Item = () => {
                           variant={item.ownerFound ? "success" : "danger"}
                         >
                           {item.ownerFound ? "Sim" : "Não"}
-                        </Badge>
-                      </td>
-
-                      <td>
-                        <Badge
-                          className="text-light"
-                          bg={
-                            item.status === "Novo"
-                              ? "primary"
-                              : item.status === "Em análise"
-                              ? "secondary"
-                              : item.status === "Recuperado"
-                              ? "success"
-                              : item.status === "Descartado"
-                              ? "danger"
-                              : ""
-                          }
-                        >
-                          {item.status}
                         </Badge>
                       </td>
                       <td>

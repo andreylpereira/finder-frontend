@@ -66,10 +66,7 @@ const Login = () => {
         <Card.Body>
           <Card.Text>
             <Form onSubmit={handleSubmit}>
-              <Form.Group
-                className="mb-3"
-                controlId="formEmail"
-              >
+              <Form.Group className="mb-3" controlId="formEmail">
                 <Form.Label>Email</Form.Label>
                 <Form.Control
                   type="email"
@@ -79,10 +76,7 @@ const Login = () => {
                   onChange={handleChange}
                 />
               </Form.Group>
-              <Form.Group
-                className="mb-3"
-                controlId="formPassword"
-              >
+              <Form.Group className="mb-3" controlId="formPassword">
                 <Form.Label>Senha</Form.Label>
                 <Form.Control
                   type="password"
@@ -96,7 +90,7 @@ const Login = () => {
                 variant="primary"
                 className="w-100 shadow"
                 disabled={isLoading}
-                type="submit" 
+                type="submit"
               >
                 {isLoading ? "Carregando..." : "LOGIN"}
               </Button>

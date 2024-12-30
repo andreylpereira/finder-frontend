@@ -7,7 +7,7 @@ import { toast } from "sonner";
 
 const NavHeader = () => {
   const { logout, auth } = useAuth();
-  
+
   const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [newPassword, setNewPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -17,7 +17,6 @@ const NavHeader = () => {
     setNewPassword("");
     setShowPasswordModal(false);
   };
-    
 
   const handlePasswordChange = async (e) => {
     e.preventDefault();
@@ -42,7 +41,11 @@ const NavHeader = () => {
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
           <Navbar.Collapse id="navbarScroll">
-            <Nav className="me-auto my-2 my-lg-0" style={{ maxHeight: "100px" }} navbarScroll>
+            <Nav
+              className="me-auto my-2 my-lg-0"
+              style={{ maxHeight: "100px" }}
+              navbarScroll
+            >
               <Nav.Link href="#action1">
                 <Link className="nav-link text-white" to="/home">
                   Home
@@ -55,13 +58,6 @@ const NavHeader = () => {
                   </Link>
                 </Nav.Link>
               )}
-              {auth.isAuthenticated && (
-                <Nav.Link href="#action3">
-                  <Link className="nav-link text-white" to="/dashboard/forms">
-                    Formulários
-                  </Link>
-                </Nav.Link>
-              )}
               {auth.isAdmin && (
                 <Nav.Link href="#action4">
                   <Link className="nav-link text-white" to="/dashboard/users">
@@ -71,8 +67,14 @@ const NavHeader = () => {
               )}
             </Nav>
             {auth.isAuthenticated && (
-              <div className="d-flex justify-content-between" style={{ gap: "10px" }}>
-                <Button variant="outline-light" onClick={handleShowPasswordModal}>
+              <div
+                className="d-flex justify-content-between"
+                style={{ gap: "10px" }}
+              >
+                <Button
+                  variant="outline-light"
+                  onClick={handleShowPasswordModal}
+                >
                   ALTERAR SENHA
                 </Button>
                 <Button variant="outline-light" onClick={logout}>
@@ -91,7 +93,11 @@ const NavHeader = () => {
         </Container>
       </Navbar>
 
-      <Modal show={showPasswordModal} onHide={handleClosePasswordModal} centered>
+      <Modal
+        show={showPasswordModal}
+        onHide={handleClosePasswordModal}
+        centered
+      >
         <Modal.Header closeButton>
           <Modal.Title>Alterar Senha</Modal.Title>
         </Modal.Header>
