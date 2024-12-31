@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Nav, Navbar, Container, Button, Modal, Form } from "react-bootstrap/";
-import { Link } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 import { useAuth } from "./../context/AuthContext";
 import { updatePassword } from "./../services/userService";
 import { toast } from "sonner";
@@ -34,9 +34,9 @@ const NavHeader = () => {
 
   return (
     <>
-      <Navbar expand="lg" className="bg-primary shadow-sm">
+      <Navbar expand="lg" className="bg-primary shadow-sm user-select-none">
         <Container fluid>
-          <Navbar.Brand className="fw-bold text-white">
+          <Navbar.Brand className="fw-bold text-white fst-italic">
             KRW Engenharia
           </Navbar.Brand>
           <Navbar.Toggle aria-controls="navbarScroll" />
@@ -46,23 +46,44 @@ const NavHeader = () => {
               style={{ maxHeight: "100px" }}
               navbarScroll
             >
-              <Nav.Link href="#action1">
-                <Link className="nav-link text-white" to="/home">
-                  Home
-                </Link>
+              <Nav.Link>
+                <NavLink
+                  to="/home"
+                  className={({ isActive }) =>
+                    isActive
+                      ? "nav-link text-white fst-italic fw-bold active"
+                      : "nav-link text-light fst-italic"
+                  }
+                >
+                  HOME
+                </NavLink>
               </Nav.Link>
               {auth.isAuthenticated && (
-                <Nav.Link href="#action2">
-                  <Link className="nav-link text-white" to="/dashboard/items">
-                    Itens
-                  </Link>
+                <Nav.Link>
+                  <NavLink
+                    to="/dashboard/items"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "nav-link text-white fst-italic fw-bold active"
+                        : "nav-link text-light fst-italic"
+                    }
+                  >
+                    ITENS
+                  </NavLink>
                 </Nav.Link>
               )}
               {auth.isAdmin && (
-                <Nav.Link href="#action4">
-                  <Link className="nav-link text-white" to="/dashboard/users">
-                    Usuários
-                  </Link>
+                <Nav.Link>
+                  <NavLink
+                    to="/dashboard/users"
+                    className={({ isActive }) =>
+                      isActive
+                        ? "nav-link text-white fst-italic fw-bold active"
+                        : "nav-link text-light fst-italic"
+                    }
+                  >
+                    USUÁRIOS
+                  </NavLink>
                 </Nav.Link>
               )}
             </Nav>
@@ -84,9 +105,9 @@ const NavHeader = () => {
             )}
             {!auth.isAuthenticated && (
               <Button variant="outline-light">
-                <Link className="nav-link text-white" to="/login">
+                <NavLink className="nav-link text-white" to="/login">
                   ENTRAR
-                </Link>
+                </NavLink>
               </Button>
             )}
           </Navbar.Collapse>
@@ -98,8 +119,10 @@ const NavHeader = () => {
         onHide={handleClosePasswordModal}
         centered
       >
-        <Modal.Header closeButton>
-          <Modal.Title>Alterar Senha</Modal.Title>
+        <Modal.Header closeButton className="bg-primary">
+          <Modal.Title className="text-white fw-bold">
+            ALTERAR SENHA
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form onSubmit={handlePasswordChange}>

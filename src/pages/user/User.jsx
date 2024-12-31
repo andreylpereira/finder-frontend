@@ -7,7 +7,7 @@ import {
 } from "../../redux/actions/userActions";
 import Bread from "../../components/Bread";
 import { toast } from "sonner";
-import { Table, Spinner, Container, Button, Col } from "react-bootstrap/";
+import { Table, Spinner, Container, Button, Col, Badge } from "react-bootstrap/";
 import UserModal from "./UserModal"; 
 
 const User = () => {
@@ -101,7 +101,7 @@ const User = () => {
               style={{ height: "calc(70vh - 50px)" }}
             >
               <Spinner animation="border" variant="primary" role="status">
-                <span className="visually-hidden">Carregando...</span>
+                <span className="visually-hidden"></span>
               </Spinner>
             </div>
           )}
@@ -124,13 +124,13 @@ const User = () => {
               </Button>
               <Table striped bordered hover className="shadow mt-3">
                 <thead>
-                  <tr className="text-center text-uppercase">
-                    <th>Nome</th>
-                    <th>E-mail</th>
-                    <th>Cargo</th>
-                    <th>Role</th>
-                    <th>Habilitado</th>
-                    <th></th>
+                  <tr className="text-center text-uppercase text-white bg-primary">
+                    <th className="text-white bg-primary border-0">NOME</th>
+                    <th className="text-white bg-primary border-0">E-MAIL</th>
+                    <th className="text-white bg-primary border-0">CARGO</th>
+                    <th className="text-white bg-primary border-0">ROLE</th>
+                    <th className="text-white bg-primary border-0">HABILITADO</th>
+                    <th className="text-white bg-primary border-0"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -140,7 +140,16 @@ const User = () => {
                       <td>{user.email}</td>
                       <td>{user.position}</td>
                       <td>{user.role}</td>
-                      <td>{user.enable ? "Sim" : "Não"}</td>
+                      <td>
+
+                      <Badge
+                          className="text-white"
+                          bg={user.enable ? "success" : "danger"}
+                          variant={user.enable ? "success" : "danger"}
+                        >
+                          {user.enable ? "Sim" : "Não"}
+                        </Badge>
+                      </td>
                       <td>
                         {user.id !== 1 ? (
                           <Button

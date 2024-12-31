@@ -191,7 +191,7 @@ const Item = () => {
 
   return (
     <>
-      <Container className="d-flex justify-content-center min-vh-100 item-select-none">
+      <Container className="d-flex justify-content-center min-vh-100 user-select-none">
         <Col className="w-100">
           {loading && (
             <div
@@ -199,7 +199,7 @@ const Item = () => {
               style={{ height: "calc(70vh - 50px)" }}
             >
               <Spinner animation="border" variant="primary" role="status">
-                <span className="visually-hidden">Carregando...</span>
+                <span className="visually-hidden"></span>
               </Spinner>
             </div>
           )}
@@ -220,17 +220,17 @@ const Item = () => {
               >
                 CADASTRAR
               </Button>
-              <Table bordered hover className="mt-3">
+              <Table bordered hover className="mt-3 shadow">
                 <thead>
-                  <tr className="text-center text-uppercase text-light bg-primary ">
-                    <th className="text-light bg-primary border-0"></th>
-                    <th className="text-light bg-primary border-0">
+                  <tr className="text-center text-uppercase text-white bg-primary">
+                    <th className="text-white bg-primary border-0"></th>
+                    <th className="text-white bg-primary border-0">
                       Descrição
                     </th>
-                    <th className="text-light bg-primary border-0">Local</th>
-                    <th className="text-light bg-primary border-0">Datas</th>
-                    <th className="text-light bg-primary border-0">Dono</th>
-                    <th className="text-light bg-primary border-0"></th>
+                    <th className="text-white bg-primary border-0">Local</th>
+                    <th className="text-white bg-primary border-0">Datas</th>
+                    <th className="text-white bg-primary border-0">Dono</th>
+                    <th className="text-white bg-primary border-0"></th>
                   </tr>
                 </thead>
                 <tbody>
@@ -240,7 +240,7 @@ const Item = () => {
                         <Figure>
                           <Figure.Caption>
                             <Badge
-                              className="text-light mb-2"
+                              className="text-white mb-2"
                               bg={
                                 item.status === "Novo"
                                   ? "primary"
@@ -270,23 +270,23 @@ const Item = () => {
                             }
                           />
                           <Figure.Caption>
-                            <h6 className="text-dark m-0">{item.title}</h6>
+                            <h6 className="text-uppercase fw-bold m-0 pt-1">{item.title}</h6>
                           </Figure.Caption>
                         </Figure>
                       </td>
                       <td className="w-25">{item.description}</td>
                       <td>{item.localFound}</td>
                       <td className="">
-                        <div className="fw-light fw-italic">
+                        <div className="fw-light fst-italic">
                           Encontrado: {formatDate(item.dateFound)}
                         </div>
-                        <div className="fw-light fw-talic">
+                        <div className="fw-light fst-italic">
                           Registrado: {formatDate(item.registrationDate)}
                         </div>
                       </td>
                       <td>
                         <Badge
-                          className="text-light"
+                          className="text-white"
                           bg={item.ownerFound ? "success" : "danger"}
                           variant={item.ownerFound ? "success" : "danger"}
                         >

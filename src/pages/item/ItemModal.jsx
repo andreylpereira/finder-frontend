@@ -34,9 +34,9 @@ const ItemModal = ({
 
   return (
     <Modal show={show} onHide={handleClose}>
-      <Modal.Header closeButton>
-        <Modal.Title>
-          {modalMode === "create" ? "Criar Item" : "Editar Item"}
+      <Modal.Header closeButton className="bg-primary">
+        <Modal.Title className="text-white fw-bold">
+          {modalMode === "create" ? "CADASTRAR ITEM" : "EDITAR ITEM"}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>

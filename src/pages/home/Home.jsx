@@ -17,7 +17,9 @@ import HomeModal from "./HomeModal.jsx";
 const Home = () => {
   const dispatch = useDispatch();
 
-  const { publicItems, loading, error } = useSelector((state) => state.publicItems);
+  const { publicItems, loading, error } = useSelector(
+    (state) => state.publicItems
+  );
 
   const [modalPhotoVisible, setModalPhotoVisible] = useState(false);
   const [modalPhoto, setModalPhoto] = useState("");
@@ -49,7 +51,10 @@ const Home = () => {
 
   return (
     <>
-      <div style={{ backgroundColor: "#E2EEFF", minHeight: "100vh" }}>
+      <div
+        style={{ backgroundColor: "#E2EEFF", minHeight: "100vh" }}
+        className="user-select-none"
+      >
         <NavHeader />
         <Container>
           {loading && (
@@ -58,7 +63,7 @@ const Home = () => {
               style={{ height: "calc(70vh - 50px)" }}
             >
               <Spinner animation="border" variant="primary" role="status">
-                <span className="visually-hidden">Carregando...</span>
+                <span className="visually-hidden"></span>
               </Spinner>
             </div>
           )}
@@ -71,10 +76,12 @@ const Home = () => {
 
           {publicItems.length > 0 ? (
             <>
-              <Row className="g-4 mt-5">
-                <Alert variant="light shadow-sm">Home</Alert>
+              <Row className="g-4 mt-5 ">
+                <Alert variant="light shadow-sm">
+                  <h5 className="fw-bold">Home</h5>
+                </Alert>
                 {publicItems.map((item) => (
-                  <Col md={3} key={item.id}>
+                  <Col md={3} key={item.id} className="mb-4">
                     <Card className="h-100 shadow" style={{ width: "305px" }}>
                       <Card.Img
                         className="shadow"

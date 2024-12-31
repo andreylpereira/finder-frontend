@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { Modal, Form, Button } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { Modal, Form, Button, Spinner } from "react-bootstrap";
 import { toast } from "sonner";
 import { createForm } from "../../services/formService";
 
@@ -13,6 +13,13 @@ const HomeModal = ({ show, handleClose, itemId }) => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    setForm((prevForm) => ({
+      ...prevForm,
+      itemId: itemId,
+    }));
+  }, [itemId]);
 
   const handleChange = (e) => {
     setForm({
@@ -34,6 +41,14 @@ const HomeModal = ({ show, handleClose, itemId }) => {
     try {
       await createForm(form);
       toast.success("Formulário enviado com sucesso.");
+      setForm({
+        nameUser: "",
+        contactUser: "",
+        contactTitle: "",
+        contactDescription: "",
+        itemId: itemId,
+      });
+
       handleClose();
     } catch (error) {
       toast.error("Erro ao enviar formulário.");
@@ -44,8 +59,10 @@ const HomeModal = ({ show, handleClose, itemId }) => {
 
   return (
     <Modal show={show} onHide={handleClose} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>Alterar Informações</Modal.Title>
+      <Modal.Header closeButton className="bg-primary">
+        <Modal.Title className="text-white fw-bold">
+          ALTERAR INFORMAÇÕES
+        </Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form onSubmit={handleSubmit}>
@@ -104,7 +121,13 @@ const HomeModal = ({ show, handleClose, itemId }) => {
             className="w-100"
             disabled={isLoading}
           >
-            {isLoading ? "Enviando..." : "ENVIAR"}
+            {isLoading ? (
+              <Spinner animation="border" variant="primary" role="status">
+                <span className="visually-hidden"></span>
+              </Spinner>
+            ) : (
+              "ENVIAR"
+            )}
           </Button>
         </Form>
       </Modal.Body>

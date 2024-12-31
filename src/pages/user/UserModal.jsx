@@ -11,9 +11,9 @@ const UserModal = ({
 }) => {
   return (
     <Modal show={show} onHide={handleClose} centered>
-      <Modal.Header closeButton>
-        <Modal.Title>
-          {modalMode === "create" ? "Criar Usuário" : "Editar Usuário"}
+      <Modal.Header closeButton className="bg-primary">
+        <Modal.Title className="text-white fw-bold">
+          {modalMode === "create" ? "CRIAR USUÁRIO" : "EDITAR USUÁRIO"}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>

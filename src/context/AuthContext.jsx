@@ -68,7 +68,7 @@ const AuthProvider = ({ children }) => {
       isAdmin: userIsAdmin,
     });
 
-    navigate("/dashboard");
+    navigate("/dashboard/items");
   };
 
   const logout = () => {
