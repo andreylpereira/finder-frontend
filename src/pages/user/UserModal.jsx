@@ -17,10 +17,12 @@ const UserModal = ({
         </Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        <Form onSubmit={(e) => {
-          e.preventDefault();
-          handleSubmit(form);
-        }}>
+        <Form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleSubmit(form);
+          }}
+        >
           <Form.Group controlId="formName">
             <Form.Label>Nome</Form.Label>
             <Form.Control
@@ -93,11 +95,15 @@ const UserModal = ({
           </Form.Group>
 
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Fechar
+            <Button variant="outline-primary" 
+            className="mt-1 fw-bold bg-gradient shadow"
+            onClick={handleClose}>
+              CANCELAR
             </Button>
-            <Button variant="primary" type="submit">
-              {modalMode === "create" ? "Criar" : "Atualizar"}
+            <Button variant="primary" type="submit"
+            className="mt-1 fw-bold bg-gradient shadow"
+            >
+              {modalMode === "create" ? "CADASTRAR" : "ATUALIZAR"}
             </Button>
           </Modal.Footer>
         </Form>

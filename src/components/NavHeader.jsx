@@ -1,5 +1,13 @@
 import React, { useState } from "react";
-import { Nav, Navbar, Container, Button, Modal, Form } from "react-bootstrap/";
+import {
+  Nav,
+  Navbar,
+  Container,
+  Button,
+  Modal,
+  Form,
+  Spinner,
+} from "react-bootstrap/";
 import { NavLink } from "react-router-dom";
 import { useAuth } from "./../context/AuthContext";
 import { updatePassword } from "./../services/userService";
@@ -34,7 +42,12 @@ const NavHeader = () => {
 
   return (
     <>
-      <Navbar expand="lg" className="bg-primary shadow-sm user-select-none">
+      <Navbar
+        expand="lg"
+        className="bg-primary 
+      bg-gradient
+      shadow-sm user-select-none"
+      >
         <Container fluid>
           <Navbar.Brand className="fw-bold text-white fst-italic">
             KRW Engenharia
@@ -95,10 +108,15 @@ const NavHeader = () => {
                 <Button
                   variant="outline-light"
                   onClick={handleShowPasswordModal}
+                  className="fw-bold bg-gradient"
                 >
                   ALTERAR SENHA
                 </Button>
-                <Button variant="outline-light" onClick={logout}>
+                <Button
+                  variant="outline-light"
+                  onClick={logout}
+                  className="fw-bold bg-gradient"
+                >
                   SAIR
                 </Button>
               </div>
@@ -136,14 +154,33 @@ const NavHeader = () => {
                 required
               />
             </Form.Group>
+
             <Button
               variant="primary"
-              className="w-100"
+              className="w-100 fw-bold bg-gradient shadow"
               type="submit"
               disabled={isLoading}
             >
-              {isLoading ? "Alterando..." : "Alterar Senha"}
+              {isLoading ? (
+                <Spinner
+                  animation="border"
+                  variant="light"
+                  role="status"
+                  style={{ width: "20px", height: "20px" }}
+                ></Spinner>
+              ) : (
+                "ALTERAR"
+              )}
             </Button>
+            {!isLoading && (
+              <Button
+                variant="outline-primary"
+                className="w-100 mt-1 fw-bold bg-gradient shadow"
+                onClick={handleClosePasswordModal}
+              >
+                CANCELAR
+              </Button>
+            )}
           </Form>
         </Modal.Body>
       </Modal>

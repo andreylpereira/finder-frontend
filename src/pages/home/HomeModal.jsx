@@ -32,8 +32,8 @@ const HomeModal = ({ show, handleClose, itemId }) => {
     e.preventDefault();
     setIsLoading(true);
 
-    if (!form.nameUser || !form.contactUser || !form.contactTitle) {
-      toast.error("Todos os campos obrigatórios devem ser preenchidos.");
+    if (!form.nameUser || !form.contactUser || !form.contactTitle || !form.contactDescription) {
+      toast.error("Todos os campos devem ser preenchidos.");
       setIsLoading(false);
       return;
     }
@@ -118,11 +118,11 @@ const HomeModal = ({ show, handleClose, itemId }) => {
           <Button
             variant="primary"
             type="submit"
-            className="w-100"
+            className="w-100 fw-bold bg-gradient shadow"
             disabled={isLoading}
           >
             {isLoading ? (
-              <Spinner animation="border" variant="primary" role="status">
+              <Spinner animation="border" variant="primary" role="status"  style={{ width: "20px", height: "20px" }}>
                 <span className="visually-hidden"></span>
               </Spinner>
             ) : (

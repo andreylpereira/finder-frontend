@@ -78,7 +78,13 @@ const Home = () => {
             <>
               <Row className="g-4 mt-5 ">
                 <Alert variant="light shadow-sm">
-                  <h5 className="fw-bold">Home</h5>
+                  <h5
+                    className="fw-bold m-0
+                  
+                  "
+                  >
+                    Home
+                  </h5>
                 </Alert>
                 {publicItems.map((item) => (
                   <Col md={3} key={item.id} className="mb-4">
@@ -100,7 +106,14 @@ const Home = () => {
                         }
                       />
                       <Card.Body className="d-flex flex-column">
-                        <Card.Title>{item.title}</Card.Title>
+                        <Card.Title>
+                          <h5
+                            className="fw-bold m-0
+                          "
+                          >
+                            {item.title}
+                          </h5>
+                        </Card.Title>
                         <div>
                           <Card.Text>
                             <p className="m-0">
@@ -123,7 +136,7 @@ const Home = () => {
                         </div>
                         <Button
                           variant="primary"
-                          className="mt-auto w-100 shadow"
+                          className="mt-auto w-100 shadow fw-bold bg-gradient"
                           onClick={() => handleHomeModal(item.id)}
                         >
                           FORMULÁRIO

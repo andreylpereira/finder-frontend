@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { loginService } from "./../../services/loginService";
 import { useNavigate } from "react-router-dom";
-import { Container, Card, Button, Form } from "react-bootstrap/";
+import { Container, Card, Button, Form, Spinner } from "react-bootstrap/";
 import { toast } from "sonner";
 
 const Login = () => {
@@ -31,15 +31,20 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsLoading(true);
-    try {
-      const acessToken = await loginService(form);
-      login(acessToken);
-      toast.success("Login efetuado com sucesso.");
-    } catch (err) {
+
+    if (!form.email || !form.password) {
+      toast.error("Todos os campos devem ser preenchidos.");
       setIsLoading(false);
-      toast.error(err.message);
+    } else {
+      try {
+        const acessToken = await loginService(form);
+        login(acessToken);
+        toast.success("Login efetuado com sucesso.");
+      } catch (err) {
+        setIsLoading(false);
+        toast.error(err.message);
+      }
     }
-    setIsLoading(false);
   };
 
   return (
@@ -88,11 +93,20 @@ const Login = () => {
               </Form.Group>
               <Button
                 variant="primary"
-                className="w-100 shadow"
+                className="w-100 mt-1 fw-bold bg-gradient shadow"
                 disabled={isLoading}
                 type="submit"
               >
-                {isLoading ? "Carregando..." : "LOGIN"}
+                {isLoading ? (
+                  <Spinner
+                    animation="border"
+                    variant="light"
+                    role="status"
+                    style={{ width: "20px", height: "20px" }}
+                  ></Spinner>
+                ) : (
+                  "LOGIN"
+                )}
               </Button>
             </Form>
           </Card.Text>

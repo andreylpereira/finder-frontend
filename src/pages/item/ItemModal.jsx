@@ -144,11 +144,19 @@ const ItemModal = ({
           </Form.Group>
 
           <Modal.Footer>
-            <Button variant="secondary" onClick={handleClose}>
-              Fechar
+            <Button
+              variant="outline-primary"
+              className="mt-1 fw-bold bg-gradient shadow"
+              onClick={handleClose}
+            >
+              CANCELAR
             </Button>
-            <Button variant="primary" type="submit">
-              {modalMode === "create" ? "Criar" : "Atualizar"}
+            <Button
+              variant="primary"
+              type="submit"
+              className="mt-1 fw-bold bg-gradient shadow"
+            >
+              {modalMode === "create" ? "CADASTRAR" : "ATUALIZAR"}
             </Button>
           </Modal.Footer>
         </Form>
